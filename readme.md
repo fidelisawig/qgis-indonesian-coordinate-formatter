@@ -2,6 +2,10 @@
 
 This repository contains a custom QGIS Expression used in the QGIS Print Layout to format map grid coordinates into the standard Indonesian DMS (Degrees, Minutes, Seconds) format with dynamic **BT** (Bujur Timur), **LS** (Lintang Selatan), and **LU** (Lintang Utara) notations.
 
+## Sample Result
+7°30′00″ LS
+120°03′00″ BT
+
 ## How to use
 1. Open your QGIS Print Layout.
 2. Select your Map item and go to the **Item Properties** panel.
