@@ -1,0 +1,31 @@
+-- Format DMS (Derajat Menit Detik) dengan notasi BT / LS / LU dinamis
+-- Dioptimalkan menggunakan with_variable dan modulo (%) agar lebih rapi dan akurat
+
+with_variable('total_detik', round(abs(@grid_number) * 3600, 0),
+  with_variable('d', floor(@total_detik / 3600),
+    with_variable('m', floor((@total_detik % 3600) / 60),
+      with_variable('s', @total_detik % 60,
+        
+        CASE
+          -- Sumbu X: Bujur → selalu BT untuk wilayah Indonesia
+          WHEN @grid_axis = 'x' THEN
+            to_string(@d) || '°' || lpad(to_string(@m), 2, '0') || '′' || lpad(to_string(@s), 2, '0') || '″ BT'
+            
+          -- Sumbu Y negatif: Lintang Selatan
+          WHEN @grid_axis = 'y' AND @grid_number < 0 THEN
+            to_string(@d) || '°' || lpad(to_string(@m), 2, '0') || '′' || lpad(to_string(@s), 2, '0') || '″ LS'
+            
+          -- Sumbu Y positif: Lintang Utara
+          WHEN @grid_axis = 'y' AND @grid_number > 0 THEN
+            to_string(@d) || '°' || lpad(to_string(@m), 2, '0') || '′' || lpad(to_string(@s), 2, '0') || '″ LU'
+            
+          -- Tepat di ekuator (0°) atau kondisi lainnya
+          ELSE 
+            '0°00′00″' 
+            -- Catatan: Jika ingin kosong saat tepat di 0, ganti '0°00′00″' dengan ''
+        END
+        
+      )
+    )
+  )
+)
